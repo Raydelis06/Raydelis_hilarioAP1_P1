@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Raydelis_HilarioAP1_P1.Models;
 
-namespace Raydelis_HilarioAP1_P1.DAL
+namespace Raydelis_HilarioAP1_P1.DAL;
+
+public class Contexto : DbContext
 {
-    public class Contexto : DbContext
-    {
-        public Contexto(DbContextOptions<Contexto> options) : base(options) { }
-    }
+    public Contexto(DbContextOptions<Contexto> options) : base(options) { }
+    public DbSet<ViajesEspaciales> ViajesEspaciales { get; set; }
 }
