@@ -18,6 +18,8 @@ builder.Services.AddDbContextFactory<Contexto>(options =>
 
 //Inyecta el servicio
 builder.Services.AddScoped<ViajesEspacialesService>();
+//Inyecta bootstrap
+builder.Services.AddBlazorBootstrap();
 
 var app = builder.Build();
 

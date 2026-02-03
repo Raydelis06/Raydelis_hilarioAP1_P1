@@ -20,32 +20,32 @@ namespace Raydelis_HilarioAP1_P1.Services
         //Metodo eliminar
         public async Task<bool>Eliminar(int viajeId)
         {
-
+            return true;
         }
         //Metodo buscar
         public async Task<ViajesEspaciales?>Buscar(int viajeId)
         {
-
+            return null;
         }
         //Metodo modificar
         private async Task<bool> Modificar(ViajesEspaciales viajeEspacial)
         {
-
+            return true;
         }
         //Metodo insertar
         private async Task<bool> Insertar(ViajesEspaciales viajeEspacial)
         {
-
+            return true;
         }
         //Metodo existe
         private async Task<bool> Existe(int viajeId)
         {
-
+            return true;
         }
         //Metodo guardar
         public async Task<bool> Guardar(ViajesEspaciales viajeEspacial)
         {
-
+            return true;
         }
     }
 }

@@ -1,7 +1,17 @@
 ﻿@page "/"
+@using Raydelis_HilarioAP1_P1.Extensors
+@inject ToastService toastService
 
 <PageTitle>Raydelis_HilarioAP1_P1</PageTitle>
 
 <h1>Raydelis Hilario <b>(2023-0749)</b></h1>
 
+<button class="btn-primary" @onclick="MostrarMensaje">Mostrar mensaje</button>
 Primer parcial programaci&oacute;n aplicada 1
+
+@code{
+    private async void MostrarMensaje()
+    {
+        toastService.ShowSuccess("Presionado correctamente");
+    }
+}
