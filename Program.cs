@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using Raydelis_hilarioAP1_P1.Components;
+using Raydelis_HilarioAP1_P1.Components;
+using Raydelis_HilarioAP1_P1.DAL;
+using Raydelis_HilarioAP1_P1.Models;
+using Raydelis_HilarioAP1_P1.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,11 +12,12 @@ builder.Services.AddRazorComponents()
 
 //Agrega cadena de conexion
 var ConStr = builder.Configuration.GetConnectionString("SqlConStr");
-builder.Services.AddDbContext<Raydelis_HilarioAP1_P1.DAL.Contexto>(options =>
-    options.UseSqlServer(ConStr));
 //Inyecta el contexto
-builder.Services.AddDbContextFactory<Raydelis_HilarioAP1_P1.DAL.Contexto>(options =>
+builder.Services.AddDbContextFactory<Contexto>(options =>
     options.UseSqlServer(ConStr));
+
+//Inyecta el servicio
+builder.Services.AddScoped<ViajesEspacialesService>();
 
 var app = builder.Build();
 
