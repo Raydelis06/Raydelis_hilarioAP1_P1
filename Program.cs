@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Raydelis_HilarioAP1_P1.Components;
 using Raydelis_HilarioAP1_P1.DAL;
+using Raydelis_HilarioAP1_P1.Extensors;
 using Raydelis_HilarioAP1_P1.Models;
 using Raydelis_HilarioAP1_P1.Services;
 
@@ -20,7 +21,6 @@ builder.Services.AddDbContextFactory<Contexto>(options =>
 builder.Services.AddScoped<ViajesEspacialesService>();
 //Inyecta bootstrap
 builder.Services.AddBlazorBootstrap();
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
