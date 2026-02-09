@@ -18,34 +18,50 @@ namespace Raydelis_HilarioAP1_P1.Services
                 .ToListAsync();
         }
         //Metodo eliminar
-        public async Task<bool>Eliminar(int viajeId)
+        public async Task<bool>Eliminar(int IdEntrada)
         {
-            return true;
+            await using var contexto = await DbFactory.CreateDbContextAsync();
+            var estudiante = await contexto.EntradasHuacales.FindAsync(IdEntrada);
+            return await contexto.EntradasHuacales.AsNoTracking().Where(e => e.IdEntrada == IdEntrada).ExecuteDeleteAsync() > 0;
+
         }
         //Metodo buscar
-        public async Task<EntradasHuacales?>Buscar(int viajeId)
+        public async Task<EntradasHuacales?>Buscar(int IdEntrada)
         {
-            return null;
+            await using var contexto = await DbFactory.CreateDbContextAsync();
+            return await contexto.EntradasHuacales.FirstOrDefaultAsync(h => h.IdEntrada == IdEntrada);
         }
         //Metodo modificar
-        private async Task<bool> Modificar(EntradasHuacales viajeEspacial)
+        private async Task<bool> Modificar(EntradasHuacales entradaHuacal)
         {
-            return true;
+            await using var contexto = await DbFactory.CreateDbContextAsync();
+            contexto.EntradasHuacales.Update(entradaHuacal);
+            return await contexto.SaveChangesAsync() > 0;
         }
         //Metodo insertar
-        private async Task<bool> Insertar(EntradasHuacales viajeEspacial)
+        private async Task<bool> Insertar(EntradasHuacales entradaHuacal)
         {
-            return true;
+            await using var contexto = await DbFactory.CreateDbContextAsync();
+            contexto.EntradasHuacales.Add(entradaHuacal);
+            return await contexto.SaveChangesAsync() > 0;
         }
         //Metodo existe
-        private async Task<bool> Existe(int viajeId)
+        private async Task<bool> Existe(int IdEntrada)
         {
-            return true;
+            await using var contexto = await DbFactory.CreateDbContextAsync();
+            return await contexto.EntradasHuacales.AnyAsync(h => h.IdEntrada == IdEntrada);
         }
         //Metodo guardar
-        public async Task<bool> Guardar(EntradasHuacales viajeEspacial)
+        public async Task<bool> Guardar(EntradasHuacales entradaHuacal)
         {
-            return true;
+            if(await Existe(entradaHuacal.IdEntrada))
+            {
+                return await Modificar(entradaHuacal);
+            }
+            else
+            {
+                return await Insertar(entradaHuacal);
+            }
         }
     }
 }
