@@ -5,11 +5,13 @@ namespace Raydelis_HilarioAP1_P1.Models;
 public class EntradasHuacales
 {
     [Key]
-    public int ViajeId { get; set; }
-    [Required(ErrorMessage = "El campo fecha de viaje es obligatorio.")]
-    public DateTime FechaViaje { get; set; }
-    [Required(ErrorMessage = "El campo descripcion es obligatorio.")]
-    public string Descripcion { get; set; }
-    [Required(ErrorMessage = "El campo costo es obligatorio.")]
-    public double Costo { get; set; }
+    public int IdEntrada { get; set; }
+    [Required(ErrorMessage = "El campo 'Fecha' es obligatorio.")]
+    public DateTime Fecha { get; set; }
+    [Required(ErrorMessage ="El 'Nombre del cliente' es obligatorio.")]
+    public string NombreCliente { get; set; }
+    [Required(ErrorMessage ="El campo 'Cantidad' es obligatorio.")]
+    public int Cantidad { get; set; }
+    [Required(ErrorMessage ="El campo 'Precio' es obligatorio.")]
+    public double Precio { get; set; }
 }
