@@ -6,13 +6,13 @@ using System.Linq.Expressions;
 
 namespace Raydelis_HilarioAP1_P1.Services
 {
-    public class ViajesEspacialesService(IDbContextFactory<Contexto>DbFactory)
+    public class EntradasHuacalesService(IDbContextFactory<Contexto>DbFactory)
     {
         //Metodo listar
-        public async Task<List<ViajesEspaciales>> Listar(Expression<Func<ViajesEspaciales, bool>> criterio)
+        public async Task<List<EntradasHuacales>> Listar(Expression<Func<EntradasHuacales, bool>> criterio)
         {
             await using var contexto = await DbFactory.CreateDbContextAsync();
-            return await contexto.ViajesEspaciales
+            return await contexto.EntradasHuacales
                 .Where(criterio)
                 .AsNoTracking()
                 .ToListAsync();
@@ -23,17 +23,17 @@ namespace Raydelis_HilarioAP1_P1.Services
             return true;
         }
         //Metodo buscar
-        public async Task<ViajesEspaciales?>Buscar(int viajeId)
+        public async Task<EntradasHuacales?>Buscar(int viajeId)
         {
             return null;
         }
         //Metodo modificar
-        private async Task<bool> Modificar(ViajesEspaciales viajeEspacial)
+        private async Task<bool> Modificar(EntradasHuacales viajeEspacial)
         {
             return true;
         }
         //Metodo insertar
-        private async Task<bool> Insertar(ViajesEspaciales viajeEspacial)
+        private async Task<bool> Insertar(EntradasHuacales viajeEspacial)
         {
             return true;
         }
@@ -43,7 +43,7 @@ namespace Raydelis_HilarioAP1_P1.Services
             return true;
         }
         //Metodo guardar
-        public async Task<bool> Guardar(ViajesEspaciales viajeEspacial)
+        public async Task<bool> Guardar(EntradasHuacales viajeEspacial)
         {
             return true;
         }

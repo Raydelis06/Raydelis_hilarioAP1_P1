@@ -18,7 +18,7 @@ builder.Services.AddDbContextFactory<Contexto>(options =>
     options.UseSqlServer(ConStr));
 
 //Inyecta el servicio
-builder.Services.AddScoped<ViajesEspacialesService>();
+builder.Services.AddScoped<EntradasHuacalesService>();
 //Inyecta bootstrap
 builder.Services.AddBlazorBootstrap();
 var app = builder.Build();
