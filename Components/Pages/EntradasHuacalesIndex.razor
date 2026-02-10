@@ -1,13 +1,16 @@
 ﻿@page "/EntradasHuacales/Index"
 @using Raydelis_HilarioAP1_P1.Models
+@using Raydelis_HilarioAP1_P1.Services
+
+@inject EntradasHuacalesService entradasHuacalesService
 
 <div class="container">
-    <div class="card-container">
+    <div class="card shadow-lg">
         <div class="card-header bg-light">
             <h5 class="card-title">Entradas de huacales</h5>
         </div>
         <div class="card-body bg-light">
-            <div class="d-flex justify-content-between bg-light gap-2">
+            <div class="d-flex  bg-light gap-2">
                 <InputText class="form-control" @bind-Value="ValorFiltro" placeholder="Buscar..."></InputText>
                 @* boton buscar *@
                 <button class="btn btn-outline-primary bi bi-search me-2" @onclick="Buscar"></button>
@@ -19,12 +22,12 @@
             <table class="table-hoover">
                 <thead>
                     <tr>
-                        <td>Entrada Id</td>
-                        <td>Fecha</td>
-                        <td>Nombre del cliente</td>
-                        <td>Cantidad</td>
-                        <td>Precio</td>
-                        <td>Acciones</td>
+                        <th>Entrada Id</th>
+                        <th>Fecha</th>
+                        <th>Nombre del cliente</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,7 +41,7 @@
                             <td>@entrada.Precio</td>
                             <td>
                                 @* boton edit *@
-                                <a class="btn btn-sm btn-outline-primary" href="/EntradasHuacales/Edit">
+                                <a class="btn btn-sm btn-outline-primary" href="/EntradasHuacales/Edit/{@entrada.IdEntrada}">
                                     <span class="bi bi-pencil-square"></span>
                                 </a>
                             </td>
@@ -49,16 +52,35 @@
         </div>
         <div class="card-footer bg-light">
             <label>Cantidad: @ListaEntradas.Count</label>
+            <label>   Total: @TotalPrecio</label>
         </div>
     </div>
 </div>
 
+
+
 @code {
     public List<EntradasHuacales> ListaEntradas = new List<EntradasHuacales>();
+    double TotalPrecio = 0.0;
     public string ValorFiltro = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaEntradas = await entradasHuacalesService.Listar(criterio: e => e.IdEntrada > 0);
+        if(ListaEntradas.Count > 0)
+        {
+            foreach(var entrada in ListaEntradas)
+            {
+                TotalPrecio += entrada.Precio;
+            }
+        }
+    }  
 
     private async void Buscar()
     {
-        
+        if(ValorFiltro.Length > 0)
+            ListaEntradas = await entradasHuacalesService.Listar(criterio: e => e.NombreCliente.Equals(ValorFiltro.ToLower()));
+        else
+            ListaEntradas = await entradasHuacalesService.Listar(criterio: e => e.IdEntrada > 0);
     }
 }
