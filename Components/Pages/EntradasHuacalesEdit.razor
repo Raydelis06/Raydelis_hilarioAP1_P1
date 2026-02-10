@@ -52,6 +52,11 @@
     public int IdEntrada { get; set; } = 0;
     EntradasHuacales entradaHuacal = new();
 
+    protected override async Task OnInitializedAsync()
+    {
+        entradaHuacal = await entradasHuacalesService.Buscar(IdEntrada);
+
+    }
     public async Task Guardar()
     {
         var guardado = await entradasHuacalesService.Guardar(entradaHuacal);
@@ -63,6 +68,19 @@
         else
         {
             toastService.ShowError("Ha ocurrido un error al intentar guardar la entrada.");
+        }
+    }
+    private async Task Eliminar()
+    {
+        var eliminada = await entradasHuacalesService.Eliminar(entradaHuacal.IdEntrada);
+        if (eliminada)
+        {
+            toastService.ShowSuccess("La entrada ha sido eliminada con exito!");
+            navigationManager.NavigateTo("/EntradasHuacales/Index");
+        }
+        else
+        {
+            toastService.ShowError("Ha ocurrido un error al intentar eliminar la entrada.");
         }
     }
 
