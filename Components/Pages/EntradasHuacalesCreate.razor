@@ -1,0 +1,67 @@
+﻿@page "/EntradasHuacales/Create"
+@using Raydelis_HilarioAP1_P1.Extensors
+@using Raydelis_HilarioAP1_P1.Models
+@using Raydelis_HilarioAP1_P1.Services
+
+@inject ToastService toastService
+@inject NavigationManager navigationManager
+@inject EntradasHuacalesService entradasHuacalesService
+
+<PageTitle>Crear entrada</PageTitle>
+<EditForm Model="@entradaHuacal" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator/>
+    <div class="container">
+        <div class="card shadow-lg">
+            <div class="card-header bg-light">
+                <h5 class="card-title">Crear entrada de huacal</h5>
+            </div>
+            <div class="card-body bg-light">
+                <div class="d-flex justify-content-start">
+                    <label>Fecha de entrada:</label>
+                    <InputDate class="form-control" @bind-Value="@entradaHuacal.Fecha" placeholder="Inrese la fecha de la entrada"></InputDate>
+                    <ValidationMessage For="@(() => entradaHuacal.Fecha)" />
+                </div>
+                <div class="d-flex justify-content-start">
+                    <label>Nombre del cliente:</label>
+                    <InputText class="form-control" @bind-Value="@entradaHuacal.NombreCliente" placeholder="Inrese el nombre del cliente..."></InputText>
+                    <ValidationMessage For="@(() => entradaHuacal.NombreCliente)" />
+                </div>
+                <div class="d-flex justify-content-start">
+                    <label>Cantidad:</label>
+                    <InputNumber class="form-control" @bind-Value="@entradaHuacal.Cantidad" placeholder="Inrese la cantidad..."></InputNumber>
+                    <ValidationMessage For="@(() => entradaHuacal.Cantidad)" />
+                </div>
+                <div class="d-flex justify-content-start">
+                    <label>Precio:</label>
+                    <InputNumber class="form-control" @bind-Value="@entradaHuacal.Precio" placeholder="Inrese la el precio del huacal..."></InputNumber>
+                    <ValidationMessage For="@(() => entradaHuacal.Precio)" />
+                </div>
+            </div>
+            <div class="card-footer d-flex justify-content-center gap-2">
+                <a href="/EntradasHuacales/Index" class="btn btn-secondary mt-3">
+                    <span class="bi bi-left">Volver</span>
+                </a>
+                <button class="btn btn-primary me-2 bi bi-save">Crear</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    EntradasHuacales entradaHuacal = new EntradasHuacales();
+
+    public async Task Guardar()
+    {
+        var guardado = await entradasHuacalesService.Guardar(entradaHuacal);
+        if (guardado)
+        {
+            toastService.ShowSuccess("La entrada ha sido guardada con exito!");
+            navigationManager.NavigateTo("/EntradasHuacales/Index");
+        }
+        else
+        {
+            toastService.ShowError("Ha ocurrido un error al intentar guardar la entrada.");
+        }
+    }
+
+}
