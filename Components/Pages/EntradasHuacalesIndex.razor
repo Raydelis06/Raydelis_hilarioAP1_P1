@@ -94,7 +94,7 @@
 
     private async Task Buscar()
     {
-        var lista = ListaEntradas.AsQueryable();
+        var lista = ListaFiltrada.AsQueryable();
 
         if (FiltroId.HasValue)
             lista = lista.Where(e => e.IdEntrada == FiltroId.Value);
@@ -109,6 +109,6 @@
             lista = lista.Where(e =>
                 e.Precio == FiltroPrecio.Value);
 
-        ListaFiltrada = lista.ToList();
+        ListaEntradas = lista.ToList();
     }
 }
