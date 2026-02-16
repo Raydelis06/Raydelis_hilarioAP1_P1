@@ -18,7 +18,7 @@
             <div class="card-body bg-light">
                 <label>Fecha de entrada:</label>
                 <div class="d-flex justify-content-start gap-2">
-                    <InputDate class="form-control" @bind-Value="@entradaHuacal.Fecha" ></InputDate>
+                    <InputDate Type="InputDateType.DateTimeLocal" class="form-control" @bind-Value="@entradaHuacal.Fecha"></InputDate>
                     <ValidationMessage For="@(() => entradaHuacal.Fecha)" />
                 </div>
                 <label>Nombre del cliente:</label>
@@ -38,10 +38,11 @@
                 </div>
             </div>
             <div class="card-footer d-flex justify-content-center gap-2">
-                <a href="/EntradasHuacales/Index" class="btn btn-secondary mt-3">
-                    <span class="bi bi-left">Volver</span>
+                <a href="/EntradasHuacales/Index" class="btn btn-secondary">
+                    <span class="btn btn-secondary bi bi-arrow-left">Volver</span>
                 </a>
-                <button class="btn btn-primary me-2 bi bi-save">Crear</button>
+                <button class="btn btn-primary bi bi-save">Guardar</button>
+                <button class="btn btn-danger bi bi-trash" @onclick="Eliminar">Eliminar</button>
             </div>
         </div>
     </div>
