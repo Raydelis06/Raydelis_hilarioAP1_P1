@@ -12,8 +12,8 @@ using Raydelis_HilarioAP1_P1.DAL;
 namespace Raydelis_HilarioAP1_P1.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20260210001034_inicial")]
-    partial class inicial
+    [Migration("20260220211352_Inicial")]
+    partial class Inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
