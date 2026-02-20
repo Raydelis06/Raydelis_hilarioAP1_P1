@@ -28,11 +28,11 @@
             </div>
             <QuickGrid TGridItem="EntradasHuacales" Items="@ListaQuery" class="table table-hover">
 
-                <PropertyColumn Property="e => e.IdEntrada" Title="Entrada Id" />
+                <PropertyColumn Property="e => e.IdEntrada" Title="Entrada Id" Class="d-none d-lg-block" />
 
                 <PropertyColumn Property="e => e.Fecha" Title="Fecha" />
 
-                <PropertyColumn Property="e => e.NombreCliente" Title="Nombre del cliente" />
+                <PropertyColumn Property="e => e.NombreCliente" Title="Nombre del cliente" Class="d-none d-lg-block" />
 
                 <PropertyColumn Property="e => e.Cantidad" Title="Cantidad" />
 
@@ -62,8 +62,8 @@
 
 @code {
     public List<EntradasHuacales> ListaEntradas = new List<EntradasHuacales>();
-    public List<EntradasHuacales> ListaFiltrada = new List<EntradasHuacales>();
     public IQueryable<EntradasHuacales> ListaQuery;
+
     double TotalPrecio = 0.0;
     public string ValorFiltro = string.Empty;
     public string? FiltroNombre { get; set; }
@@ -82,13 +82,12 @@
                 TotalPrecio += entrada.Precio * entrada.Cantidad;
             }
         }
-        ListaFiltrada = ListaEntradas;
         ListaQuery = ListaEntradas.AsQueryable();
     }
 
     private async Task Buscar()
     {
-        var lista = ListaFiltrada.AsQueryable();
+        var lista = ListaEntradas.AsQueryable();
 
         if (FiltroId.HasValue)
             lista = lista.Where(e => e.IdEntrada == FiltroId.Value);
