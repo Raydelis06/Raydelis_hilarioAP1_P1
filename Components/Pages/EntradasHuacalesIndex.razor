@@ -6,8 +6,12 @@
 
 <div class="container">
     <div class="card shadow-lg">
-        <div class="card-header bg-light">
+        <div class="card-header bg-light d-flex justify-content-between">
             <h5 class="card-title">Entradas de huacales</h5>
+            @* boton create *@
+            <a href="/EntradasHuacales/Create" class="btn btn-primary">
+                <span class="bi bi-plus-square mt-3"></span>
+            </a>
         </div>
         <div class="card-body bg-light">
             <div class="d-flex justify-content-between">
@@ -20,41 +24,28 @@
                 <InputNumber class="form-control" @bind-Value="FiltroPrecio" placeholder="Filtrar por precio" />
                 @* boton buscar *@
                 <button class="btn btn-outline-primary bi bi-search me-2" @onclick="Buscar"></button>
-                @* boton create *@
-                <a href="/EntradasHuacales/Create" class="btn btn-primary">
-                    <span class="bi bi-plus-square mt-3"></span>
-                </a>
+                
             </div>
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Entrada Id</th>
-                        <th>Fecha</th>
-                        <th>Nombre del cliente</th>
-                        <th>Cantidad</th>
-                        <th>Precio</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach(var entrada in ListaEntradas)
-                    {
-                        <tr>
-                            <td>@entrada.IdEntrada</td>
-                            <td>@entrada.Fecha</td>
-                            <td>@entrada.NombreCliente</td>
-                            <td>@entrada.Cantidad</td>
-                            <td>@entrada.Precio</td>
-                            <td>
-                                @* boton edit *@
-                                <a class="btn btn-sm btn-outline-primary" href=@($"/EntradasHuacales/Edit/{entrada.IdEntrada}")">
-                                    <span class="bi bi-pencil-square"></span>
-                                </a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            <QuickGrid TGridItem="EntradasHuacales" Items="@ListaQuery" class="table table-hover">
+
+                <PropertyColumn Property="e => e.IdEntrada" Title="Entrada Id" />
+
+                <PropertyColumn Property="e => e.Fecha" Title="Fecha" />
+
+                <PropertyColumn Property="e => e.NombreCliente" Title="Nombre del cliente" />
+
+                <PropertyColumn Property="e => e.Cantidad" Title="Cantidad" />
+
+                <PropertyColumn Property="e => e.Precio" Title="Precio" />
+
+                <TemplateColumn Title="Acciones">
+                    <a class="btn btn-sm btn-outline-primary"
+                       href="@($"/EntradasHuacales/Edit/{context.IdEntrada}")">
+                        <span class="bi bi-pencil-square"></span>
+                    </a>
+                </TemplateColumn>
+
+            </QuickGrid>
         </div>
         <div class="card-footer bg-light d-flex justify-content-between">
             <div>
@@ -72,6 +63,7 @@
 @code {
     public List<EntradasHuacales> ListaEntradas = new List<EntradasHuacales>();
     public List<EntradasHuacales> ListaFiltrada = new List<EntradasHuacales>();
+    public IQueryable<EntradasHuacales> ListaQuery;
     double TotalPrecio = 0.0;
     public string ValorFiltro = string.Empty;
     public string? FiltroNombre { get; set; }
@@ -82,6 +74,7 @@
     protected override async Task OnInitializedAsync()
     {
         ListaEntradas = await entradasHuacalesService.Listar(criterio: e => e.IdEntrada > 0);
+
         if(ListaEntradas.Count > 0)
         {
             foreach(var entrada in ListaEntradas)
@@ -90,6 +83,7 @@
             }
         }
         ListaFiltrada = ListaEntradas;
+        ListaQuery = ListaEntradas.AsQueryable();
     }
 
     private async Task Buscar()
