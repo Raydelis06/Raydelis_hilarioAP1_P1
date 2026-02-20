@@ -8,8 +8,8 @@ public class EntradasHuacales
     public int IdEntrada { get; set; }
     [Required(ErrorMessage = "El campo 'Fecha' es obligatorio.")]
     public DateTime Fecha { get; set; }
-    [Required(ErrorMessage ="El 'Nombre del cliente' es obligatorio.")]
-    public string NombreCliente { get; set; }
+    [Required(ErrorMessage = "El 'Nombre del cliente' es obligatorio.")]
+    public string NombreCliente { get; set; } = string.Empty;
     [Required(ErrorMessage ="El campo 'Cantidad' es obligatorio.")]
     [Range(1, double.MaxValue, ErrorMessage = "La cantidad debe ser mayor que 0")]
     public int Cantidad { get; set; }
