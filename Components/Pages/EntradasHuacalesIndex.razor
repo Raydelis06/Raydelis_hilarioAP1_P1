@@ -26,26 +26,37 @@
                 <button class="btn btn-outline-primary bi bi-search me-2" @onclick="Buscar"></button>
                 
             </div>
-            <QuickGrid TGridItem="EntradasHuacales" Items="@ListaQuery" class="table table-hover">
+           
+            <div class="row g-3 mt-3">
+                <div class="col-md-3">
+                    <label><strong>Desde</strong></label>
+                    <InputDate class="form-control"
+                               @bind-Value="FechaDesde" />
+                </div>
+                <div class="col-md-3">
+                    <label><strong>Hasta</strong></label>
+                    <InputDate class="form-control"
+                               @bind-Value="FechaHasta" />
+                </div>
+            </div>
+            <div class="mt-3 table-responsive">
+                <QuickGrid TGridItem="EntradasHuacales" Items="@ListaQuery" class="table table-hover">
+                    <PropertyColumn Property="e => e.IdEntrada" Title="Entrada Id" />
+                    <PropertyColumn Property="e => e.Fecha" Title="Fecha" />
+                    <PropertyColumn Property="e => e.NombreCliente" Title="Nombre del cliente"  />
+                    <PropertyColumn Property="e => e.Cantidad" Title="Cantidad" />
+                    <PropertyColumn Property="e => e.Precio" Title="Precio" />
 
-                <PropertyColumn Property="e => e.IdEntrada" Title="Entrada Id" Class="d-none d-lg-block" />
+                    <TemplateColumn Title="Acciones">
+                        <a class="btn btn-sm btn-outline-primary"
+                           href="@($"/EntradasHuacales/Edit/{context.IdEntrada}")">
+                            <span class="bi bi-pencil-square"></span>
+                        </a>
+                    </TemplateColumn>
 
-                <PropertyColumn Property="e => e.Fecha" Title="Fecha" />
-
-                <PropertyColumn Property="e => e.NombreCliente" Title="Nombre del cliente" Class="d-none d-lg-block" />
-
-                <PropertyColumn Property="e => e.Cantidad" Title="Cantidad" />
-
-                <PropertyColumn Property="e => e.Precio" Title="Precio" />
-
-                <TemplateColumn Title="Acciones">
-                    <a class="btn btn-sm btn-outline-primary"
-                       href="@($"/EntradasHuacales/Edit/{context.IdEntrada}")">
-                        <span class="bi bi-pencil-square"></span>
-                    </a>
-                </TemplateColumn>
-
-            </QuickGrid>
+                </QuickGrid>
+            </div>
+            
         </div>
         <div class="card-footer bg-light d-flex justify-content-between">
             <div>
@@ -62,7 +73,7 @@
 
 @code {
     public List<EntradasHuacales> ListaEntradas = new List<EntradasHuacales>();
-    public IQueryable<EntradasHuacales> ListaQuery;
+    public IQueryable<EntradasHuacales> ListaQuery = Enumerable.Empty<EntradasHuacales>().AsQueryable();
 
     double TotalPrecio = 0.0;
     public string ValorFiltro = string.Empty;
@@ -70,6 +81,8 @@
     public int? FiltroId { get; set; }
     public int? FiltroCantidad { get; set; }
     public double? FiltroPrecio { get; set; }
+    public DateTime? FechaDesde { get; set; }
+    public DateTime? FechaHasta { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -77,10 +90,10 @@
 
         if(ListaEntradas.Count > 0)
         {
-            foreach(var entrada in ListaEntradas)
-            {
-                TotalPrecio += entrada.Precio * entrada.Cantidad;
-            }
+            FechaDesde = ListaEntradas.Min(e => e.Fecha).Date;
+            FechaHasta = ListaEntradas.Max(e => e.Fecha).Date;
+            TotalPrecio = ListaEntradas
+            .Sum(e => e.Precio * e.Cantidad);
         }
         ListaQuery = ListaEntradas.AsQueryable();
     }
@@ -102,6 +115,16 @@
             lista = lista.Where(e =>
                 e.Precio == FiltroPrecio.Value);
 
-        ListaEntradas = lista.ToList();
+        // Filtro por fecha 
+        if (FechaDesde.HasValue)
+            lista = lista.Where(e => e.Fecha.Date >= FechaDesde.Value.Date);
+
+        if (FechaHasta.HasValue)
+            lista = lista.Where(e => e.Fecha.Date <= FechaHasta.Value.Date);
+
+        ListaQuery = lista;
+
+        TotalPrecio = ListaEntradas
+            .Sum(e => e.Precio * e.Cantidad);
     }
 }
