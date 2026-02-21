@@ -1,8 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Raydelis_HilarioAP1_P1.Components;
 using Raydelis_HilarioAP1_P1.DAL;
-using Raydelis_HilarioAP1_P1.Extensors;
-using Raydelis_HilarioAP1_P1.Models;
 using Raydelis_HilarioAP1_P1.Services;
 
 var builder = WebApplication.CreateBuilder(args);
