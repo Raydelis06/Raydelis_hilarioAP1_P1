@@ -16,32 +16,33 @@
                 <h5 class="card-title">Editar entrada de huacal</h5>
             </div>
             <div class="card-body bg-light">
-                <label>Fecha de entrada:</label>
+                <label><strong>Fecha de entrada:</strong></label>
                 <div class="d-flex justify-content-start gap-2">
-                    <InputDate class="form-control" @bind-Value="@entradaHuacal.Fecha" ></InputDate>
+                    <InputDate Type="InputDateType.DateTimeLocal" class="form-control" @bind-Value="@entradaHuacal.Fecha"></InputDate>
                     <ValidationMessage For="@(() => entradaHuacal.Fecha)" />
                 </div>
-                <label>Nombre del cliente:</label>
+                <label><strong>Nombre del cliente:</strong></label>
                 <div class="d-flex justify-content-start gap-2">
                     <InputText class="form-control" @bind-Value="@entradaHuacal.NombreCliente" ></InputText>
                     <ValidationMessage For="@(() => entradaHuacal.NombreCliente)" />
                 </div>
-                <label>Cantidad:</label>
+                <label><strong>Cantidad:</strong></label>
                 <div class="d-flex justify-content-start gap-2">
                     <InputNumber class="form-control" @bind-Value="@entradaHuacal.Cantidad" ></InputNumber>
                     <ValidationMessage For="@(() => entradaHuacal.Cantidad)" />
                 </div>
-                <label>Precio:</label>
+                <label><strong>Precio:</strong></label>
                 <div class="d-flex justify-content-start gap-2">
                     <InputNumber class="form-control" @bind-Value="@entradaHuacal.Precio" ></InputNumber>
                     <ValidationMessage For="@(() => entradaHuacal.Precio)" />
                 </div>
             </div>
             <div class="card-footer d-flex justify-content-center gap-2">
-                <a href="/EntradasHuacales/Index" class="btn btn-secondary mt-3">
-                    <span class="bi bi-left">Volver</span>
+                <a href="/EntradasHuacales/Index" class="btn btn-secondary">
+                    <span class="btn btn-secondary bi bi-arrow-left">Volver</span>
                 </a>
-                <button class="btn btn-primary me-2 bi bi-save">Crear</button>
+                <button class="btn btn-primary bi bi-save">Guardar</button>
+                <button class="btn btn-danger bi bi-trash" @onclick="Eliminar">Eliminar</button>
             </div>
         </div>
     </div>
@@ -54,34 +55,54 @@
 
     protected override async Task OnInitializedAsync()
     {
-        entradaHuacal = await entradasHuacalesService.Buscar(IdEntrada);
+        var entrada = await entradasHuacalesService.Buscar(IdEntrada);
+        if (entrada != null)
+            entradaHuacal = entrada;
 
     }
     public async Task Guardar()
     {
-        var guardado = await entradasHuacalesService.Guardar(entradaHuacal);
-        if (guardado)
+        try
         {
-            toastService.ShowSuccess("La entrada ha sido guardada con exito!");
-            navigationManager.NavigateTo("/EntradasHuacales/Index");
+            var guardado = await entradasHuacalesService.Guardar(entradaHuacal);
+            if (guardado)
+            {
+                toastService.ShowSuccess("La entrada ha sido guardada con exito!");
+                navigationManager.NavigateTo("/EntradasHuacales/Index");
+            }
+            else
+            {
+                toastService.ShowError("Ha ocurrido un error al intentar guardar la entrada.");
+            }
         }
-        else
+        catch (Exception e)
         {
+            Console.WriteLine("Excepcion: " + e.Message);
             toastService.ShowError("Ha ocurrido un error al intentar guardar la entrada.");
         }
+
     }
     private async Task Eliminar()
     {
-        var eliminada = await entradasHuacalesService.Eliminar(entradaHuacal.IdEntrada);
-        if (eliminada)
+        try
         {
-            toastService.ShowSuccess("La entrada ha sido eliminada con exito!");
-            navigationManager.NavigateTo("/EntradasHuacales/Index");
+            var eliminada = await entradasHuacalesService.Eliminar(entradaHuacal.IdEntrada);
+            if (eliminada)
+            {
+                toastService.ShowSuccess("La entrada ha sido eliminada con exito!");
+                navigationManager.NavigateTo("/EntradasHuacales/Index");
+            }
+            else
+            {
+                toastService.ShowError("Ha ocurrido un error al intentar eliminar la entrada.");
+            }
         }
-        else
+        catch (Exception e)
         {
+            Console.WriteLine("Excepcion: " + e.Message);
             toastService.ShowError("Ha ocurrido un error al intentar eliminar la entrada.");
         }
+    
     }
 
 }

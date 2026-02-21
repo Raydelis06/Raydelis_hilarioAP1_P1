@@ -12,10 +12,7 @@ namespace Raydelis_HilarioAP1_P1.Services
         public async Task<List<EntradasHuacales>> Listar(Expression<Func<EntradasHuacales, bool>> criterio)
         {
             await using var contexto = await DbFactory.CreateDbContextAsync();
-            return await contexto.EntradasHuacales
-                .Where(criterio)
-                .AsNoTracking()
-                .ToListAsync();
+            return await contexto.EntradasHuacales.Where(criterio).AsNoTracking().ToListAsync();
         }
         //Metodo eliminar
         public async Task<bool>Eliminar(int IdEntrada)
@@ -56,6 +53,7 @@ namespace Raydelis_HilarioAP1_P1.Services
         {
             if(await Existe(entradaHuacal.IdEntrada))
             {
+
                 return await Modificar(entradaHuacal);
             }
             else

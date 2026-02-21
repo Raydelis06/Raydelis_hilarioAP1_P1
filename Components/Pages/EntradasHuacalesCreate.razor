@@ -16,32 +16,34 @@
                 <h5 class="card-title">Crear entrada de huacal</h5>
             </div>
             <div class="card-body bg-light">
-                <label>Fecha de entrada:</label>
-                <div class="d-flex justify-content-start gap-2">
-                    <InputDate class="form-control" @bind-Value="@entradaHuacal.Fecha" placeholder="Inrese la fecha de la entrada"></InputDate>
-                    <ValidationMessage For="@(() => entradaHuacal.Fecha)" />
-                </div>
-                <label>Nombre del cliente:</label>
-                <div class="d-flex justify-content-start gap-2">
-                    <InputText class="form-control" @bind-Value="@entradaHuacal.NombreCliente" placeholder="Inrese el nombre del cliente..."></InputText>
-                    <ValidationMessage For="@(() => entradaHuacal.NombreCliente)" />
-                </div>
-                <label>Cantidad:</label>
-                <div class="d-flex justify-content-start gap-2">
-                    <InputNumber class="form-control" @bind-Value="@entradaHuacal.Cantidad" placeholder="Inrese la cantidad..."></InputNumber>
-                    <ValidationMessage For="@(() => entradaHuacal.Cantidad)" />
-                </div>
-                <label>Precio:</label>
-                <div class="d-flex justify-content-start gap-2">
-                    <InputNumber class="form-control" @bind-Value="@entradaHuacal.Precio" placeholder="Inrese la el precio del huacal..."></InputNumber>
-                    <ValidationMessage For="@(() => entradaHuacal.Precio)" />
+                <div class="justify-content-between">
+                    <label><strong>Fecha de entrada:</strong></label>
+                    <div class="d-flex justify-content-start gap-2">
+                        <InputDate Type="InputDateType.DateTimeLocal" class="form-control" @bind-Value="@entradaHuacal.Fecha" placeholder="Ingrese la fecha de la entrada"></InputDate>
+                        <ValidationMessage For="@(() => entradaHuacal.Fecha)" />
+                    </div>
+                    <label><strong>Nombre del cliente:</strong></label>
+                    <div class="d-flex justify-content-start gap-2">
+                        <InputText class="form-control" @bind-Value="@entradaHuacal.NombreCliente" placeholder="Ingrese el nombre del cliente..."></InputText>
+                        <ValidationMessage For="@(() => entradaHuacal.NombreCliente)" />
+                    </div>
+                    <label><strong>Cantidad:</strong></label>
+                    <div class="d-flex justify-content-start gap-2">
+                        <InputNumber class="form-control" @bind-Value="@entradaHuacal.Cantidad" placeholder="Ingrese la cantidad..."></InputNumber>
+                        <ValidationMessage For="@(() => entradaHuacal.Cantidad)" />
+                    </div>
+                    <label><strong>Precio:</strong></label>
+                    <div class="d-flex justify-content-start gap-2">
+                        <InputNumber class="form-control" @bind-Value="@entradaHuacal.Precio" placeholder="Ingrese la el precio del huacal..."></InputNumber>
+                        <ValidationMessage For="@(() => entradaHuacal.Precio)" />
+                    </div>
                 </div>
             </div>
             <div class="card-footer d-flex justify-content-center gap-2">
-                <a href="/EntradasHuacales/Index" class="btn btn-secondary mt-3">
-                    <span class="bi bi-left">Volver</span>
+                <a href="/EntradasHuacales/Index" class="btn btn-secondary ">
+                    <span class="bi bi-arrow-left">Volver</span>
                 </a>
-                <button class="btn btn-primary me-2 bi bi-save">Crear</button>
+                <button class="btn btn-primary bi bi-save">Crear</button>
             </div>
         </div>
     </div>
