@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Raydelis_HilarioAP1_P1.Models;
 
@@ -16,4 +17,8 @@ public class EntradasHuacales
     [Required(ErrorMessage ="El campo 'Precio' es obligatorio.")]
     [Range(1, double.MaxValue, ErrorMessage = "El precio debe ser mayor que 0")]
     public double Precio { get; set; }
+
+    [ForeignKey("IdEntrada")]
+    public ICollection<DetallesEntrada> DetallesEntrada { get; set; } = new List<DetallesEntrada>();
+
 }
