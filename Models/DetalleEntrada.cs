@@ -8,6 +8,6 @@ public class DetalleEntrada
     public int DetalleId { get; set; }
     public int EntradaId { get; set; }
     [Required(ErrorMessage = "Este campo es obligatorio")]
-    public ICollection<TiposHuacales> TiposHuacales { get; set; }
+    public int TipoId { get; set; }
 
 }
