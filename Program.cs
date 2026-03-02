@@ -17,6 +17,7 @@ builder.Services.AddDbContextFactory<Contexto>(options =>
 
 //Inyecta el servicio
 builder.Services.AddScoped<EntradasHuacalesService>();
+builder.Services.AddScoped<TiposService>();
 //Inyecta bootstrap
 builder.Services.AddBlazorBootstrap();
 var app = builder.Build();
