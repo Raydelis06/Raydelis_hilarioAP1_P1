@@ -6,53 +6,65 @@
 
 <div class="container">
     <div class="card shadow-lg">
-        <div class="card-header bg-light">
+        <div class="card-header bg-light d-flex justify-content-between">
             <h5 class="card-title">Entradas de huacales</h5>
+            @* boton create *@
+            <a href="/EntradasHuacales/Create" class="btn btn-primary">
+                <span class="bi bi-plus-square mt-3"></span>
+            </a>
         </div>
         <div class="card-body bg-light">
+            <div class="d-flex justify-content-between">
+                
+            </div>
             <div class="d-flex  bg-light gap-2">
-                <InputText class="form-control" @bind-Value="ValorFiltro" placeholder="Buscar..."></InputText>
+                <InputNumber class="form-control" @bind-Value="FiltroId" placeholder="Filtrar por Id" />
+                <InputText class="form-control" @bind-Value="FiltroNombre" placeholder="Filtrar por cliente" />
+                <InputNumber class="form-control" @bind-Value="FiltroCantidad" placeholder="Filtrar por cantidad" />
+                <InputNumber class="form-control" @bind-Value="FiltroPrecio" placeholder="Filtrar por precio" />
                 @* boton buscar *@
                 <button class="btn btn-outline-primary bi bi-search me-2" @onclick="Buscar"></button>
-                @* boton create *@
-                <a href="/EntradasHuacales/Create" class="btn btn-primary">
-                    <span class="bi bi-plus-square mt-3"></span>
-                </a>
+                
             </div>
-            <table class="table-hoover">
-                <thead>
-                    <tr>
-                        <th>Entrada Id</th>
-                        <th>Fecha</th>
-                        <th>Nombre del cliente</th>
-                        <th>Cantidad</th>
-                        <th>Precio</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach(var entrada in ListaEntradas)
-                    {
-                        <tr>
-                            <td>@entrada.IdEntrada</td>
-                            <td>@entrada.Fecha</td>
-                            <td>@entrada.NombreCliente</td>
-                            <td>@entrada.Cantidad</td>
-                            <td>@entrada.Precio</td>
-                            <td>
-                                @* boton edit *@
-                                <a class="btn btn-sm btn-outline-primary" href=@($"/EntradasHuacales/Edit/{entrada.IdEntrada}")">
-                                    <span class="bi bi-pencil-square"></span>
-                                </a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+           
+            <div class="row g-3 mt-3">
+                <div class="col-md-3">
+                    <label><strong>Desde</strong></label>
+                    <InputDate class="form-control"
+                               @bind-Value="FechaDesde" />
+                </div>
+                <div class="col-md-3">
+                    <label><strong>Hasta</strong></label>
+                    <InputDate class="form-control"
+                               @bind-Value="FechaHasta" />
+                </div>
+            </div>
+            <div class="mt-3 table-responsive">
+                <QuickGrid TGridItem="EntradasHuacales" Items="@ListaQuery" class="table table-hover">
+                    <PropertyColumn Property="e => e.IdEntrada" Title="Entrada Id" />
+                    <PropertyColumn Property="e => e.Fecha" Title="Fecha" />
+                    <PropertyColumn Property="e => e.NombreCliente" Title="Nombre del cliente"  />
+                    <TemplateColumn Title="Cantidad">
+                        @context.DetallesEntrada.Sum(d => d.Cantidad)
+                    </TemplateColumn>
+                    <TemplateColumn Title="Acciones">
+                        <a class="btn btn-sm btn-outline-primary"
+                           href="@($"/EntradasHuacales/Edit/{context.IdEntrada}")">
+                            <span class="bi bi-pencil-square"></span>
+                        </a>
+                    </TemplateColumn>
+
+                </QuickGrid>
+            </div>
+            
         </div>
-        <div class="card-footer bg-light">
-            <label>Cantidad: @ListaEntradas.Count</label>
-            <label>   Total: @TotalPrecio</label>
+        <div class="card-footer bg-light d-flex justify-content-between">
+            <div>
+                <label><strong>Cantidad: </strong>@ListaEntradas.Count</label>
+            </div>
+            <div>
+                <label><strong>Total: </strong>$@TotalPrecio</label>
+            </div>
         </div>
     </div>
 </div>
@@ -61,26 +73,54 @@
 
 @code {
     public List<EntradasHuacales> ListaEntradas = new List<EntradasHuacales>();
+    public IQueryable<EntradasHuacales> ListaQuery = Enumerable.Empty<EntradasHuacales>().AsQueryable();
+
     double TotalPrecio = 0.0;
     public string ValorFiltro = string.Empty;
+    public string? FiltroNombre { get; set; }
+    public int? FiltroId { get; set; }
+    public int? FiltroCantidad { get; set; }
+    public double? FiltroPrecio { get; set; }
+    public DateTime? FechaDesde { get; set; }
+    public DateTime? FechaHasta { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         ListaEntradas = await entradasHuacalesService.Listar(criterio: e => e.IdEntrada > 0);
+
         if(ListaEntradas.Count > 0)
         {
-            foreach(var entrada in ListaEntradas)
-            {
-                TotalPrecio += entrada.Precio;
-            }
+            FechaDesde = ListaEntradas.Min(e => e.Fecha).Date;
+            FechaHasta = ListaEntradas.Max(e => e.Fecha).Date;
+            TotalPrecio = ListaEntradas.Sum(e => e.DetallesEntrada.Sum(e => e.Precio * e.Cantidad));
         }
-    }  
+        ListaQuery = ListaEntradas.AsQueryable();
+    }
 
-    private async void Buscar()
+    private async Task Buscar()
     {
-        if(ValorFiltro.Length > 0)
-            ListaEntradas = await entradasHuacalesService.Listar(criterio: e => e.NombreCliente.Equals(ValorFiltro.ToLower()));
-        else
-            ListaEntradas = await entradasHuacalesService.Listar(criterio: e => e.IdEntrada > 0);
+        var lista = ListaEntradas.AsQueryable();
+
+        if (FiltroId.HasValue)
+            lista = lista.Where(e => e.IdEntrada == FiltroId.Value);
+
+        if (!string.IsNullOrWhiteSpace(FiltroNombre))
+            lista = lista.Where(e => e.NombreCliente.ToLower().Contains(FiltroNombre.ToLower()));
+
+        if (FiltroCantidad.HasValue)
+            lista = lista.Where(e => e.DetallesEntrada.Sum(e => e.Cantidad) == FiltroCantidad.Value);
+
+        if (FiltroPrecio.HasValue)
+            lista = lista.Where(e => e.DetallesEntrada.First().Precio == FiltroPrecio.Value);
+
+        // Filtro por fecha 
+        if (FechaDesde.HasValue)
+            lista = lista.Where(e => e.Fecha.Date >= FechaDesde.Value.Date);
+
+        if (FechaHasta.HasValue)
+            lista = lista.Where(e => e.Fecha.Date <= FechaHasta.Value.Date);
+
+        ListaQuery = lista;
+        TotalPrecio = ListaEntradas.Sum(e => e.DetallesEntrada.Sum(e => e.Precio * e.Cantidad));
     }
 }
