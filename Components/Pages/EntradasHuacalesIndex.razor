@@ -44,9 +44,9 @@
                     <PropertyColumn Property="e => e.IdEntrada" Title="Entrada Id" />
                     <PropertyColumn Property="e => e.Fecha" Title="Fecha" />
                     <PropertyColumn Property="e => e.NombreCliente" Title="Nombre del cliente"  />
-                    <PropertyColumn Property="e => e.Cantidad" Title="Cantidad" />
-                    <PropertyColumn Property="e => e.Precio" Title="Precio" />
-
+                    <TemplateColumn Title="Cantidad">
+                        @context.DetallesEntrada.Sum(d => d.Cantidad)
+                    </TemplateColumn>
                     <TemplateColumn Title="Acciones">
                         <a class="btn btn-sm btn-outline-primary"
                            href="@($"/EntradasHuacales/Edit/{context.IdEntrada}")">
@@ -92,8 +92,7 @@
         {
             FechaDesde = ListaEntradas.Min(e => e.Fecha).Date;
             FechaHasta = ListaEntradas.Max(e => e.Fecha).Date;
-            TotalPrecio = ListaEntradas
-            .Sum(e => e.Precio * e.Cantidad);
+            TotalPrecio = ListaEntradas.Sum(e => e.DetallesEntrada.Sum(e => e.Precio * e.Cantidad));
         }
         ListaQuery = ListaEntradas.AsQueryable();
     }
@@ -109,11 +108,10 @@
             lista = lista.Where(e => e.NombreCliente.ToLower().Contains(FiltroNombre.ToLower()));
 
         if (FiltroCantidad.HasValue)
-            lista = lista.Where(e => e.Cantidad == FiltroCantidad.Value);
+            lista = lista.Where(e => e.DetallesEntrada.Sum(e => e.Cantidad) == FiltroCantidad.Value);
 
         if (FiltroPrecio.HasValue)
-            lista = lista.Where(e =>
-                e.Precio == FiltroPrecio.Value);
+            lista = lista.Where(e => e.DetallesEntrada.First().Precio == FiltroPrecio.Value);
 
         // Filtro por fecha 
         if (FechaDesde.HasValue)
@@ -123,8 +121,6 @@
             lista = lista.Where(e => e.Fecha.Date <= FechaHasta.Value.Date);
 
         ListaQuery = lista;
-
-        TotalPrecio = ListaEntradas
-            .Sum(e => e.Precio * e.Cantidad);
+        TotalPrecio = ListaEntradas.Sum(e => e.DetallesEntrada.Sum(e => e.Precio * e.Cantidad));
     }
 }
